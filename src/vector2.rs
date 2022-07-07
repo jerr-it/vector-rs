@@ -26,6 +26,34 @@ where
     }
 }
 
+impl Vector2<f32> {
+    pub fn magnitude(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+
+    pub fn normalize(&self) -> Vector2<f32> {
+        let inv_sqrt = self.magnitude().recip();
+        Vector2 {
+            x: self.x * inv_sqrt,
+            y: self.y * inv_sqrt,
+        }
+    }
+}
+
+impl Vector2<f64> {
+    pub fn magnitude(&self) -> f64 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+
+    pub fn normalize(&self) -> Vector2<f64> {
+        let inv_sqrt = self.magnitude().recip();
+        Vector2 {
+            x: self.x * inv_sqrt,
+            y: self.y * inv_sqrt,
+        }
+    }
+}
+
 impl<T: Add<Output = T>> Add<Vector2<T>> for Vector2<T> {
     type Output = Vector2<T>;
 

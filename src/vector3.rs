@@ -37,6 +37,36 @@ where
     }
 }
 
+impl Vector3<f32> {
+    pub fn magnitude(&self) -> f32 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+
+    pub fn normalize(&self) -> Vector3<f32> {
+        let inv_sqrt = self.magnitude().recip();
+        Vector3 {
+            x: self.x * inv_sqrt,
+            y: self.y * inv_sqrt,
+            z: self.z * inv_sqrt,
+        }
+    }
+}
+
+impl Vector3<f64> {
+    pub fn magnitude(&self) -> f64 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+
+    pub fn normalize(&self) -> Vector3<f64> {
+        let inv_sqrt = self.magnitude().recip();
+        Vector3 {
+            x: self.x * inv_sqrt,
+            y: self.y * inv_sqrt,
+            z: self.z * inv_sqrt,
+        }
+    }
+}
+
 impl<T: Add<Output = T>> Add<Vector3<T>> for Vector3<T> {
     type Output = Vector3<T>;
 
