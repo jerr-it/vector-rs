@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 use super::Vector4;
 
@@ -10,13 +10,30 @@ pub struct Vector3<T> {
     pub z: T,
 }
 
-impl<T: Default + Copy> Vector3<T> {
-    pub fn new(x: T, y: T, z: T) -> Vector3<T>{
+impl<T> Vector3<T>
+where
+    T: Default + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>,
+{
+    pub fn new(x: T, y: T, z: T) -> Vector3<T> {
         Vector3 { x, y, z }
     }
 
     pub fn as_vector4(&self) -> Vector4<T> {
         Vector4::new(self.x, self.y, self.z, Default::default())
+    }
+
+    // Calculate the dot product of two vectors
+    pub fn dot(&self, other: &Vector3<T>) -> T {
+        self.x * other.x + self.y * other.y + self.z * other.z
+    }
+
+    // Calculate the cross product of two vectors
+    pub fn cross(&self, other: &Vector3<T>) -> Vector3<T> {
+        Vector3 {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x,
+        }
     }
 }
 
@@ -27,7 +44,7 @@ impl<T: Add<Output = T>> Add<Vector3<T>> for Vector3<T> {
         Vector3 {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
-            z: self.z + rhs.z
+            z: self.z + rhs.z,
         }
     }
 }
@@ -47,7 +64,7 @@ impl<T: Sub<Output = T>> Sub<Vector3<T>> for Vector3<T> {
         Vector3 {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
-            z: self.z - rhs.z
+            z: self.z - rhs.z,
         }
     }
 }
@@ -67,7 +84,7 @@ impl<T: Mul<Output = T> + Copy> Mul<T> for Vector3<T> {
         Vector3 {
             x: self.x * rhs,
             y: self.y * rhs,
-            z: self.z * rhs
+            z: self.z * rhs,
         }
     }
 }
@@ -100,6 +117,23 @@ mod tests {
         assert_eq!(v4.y, 2.0);
         assert_eq!(v4.z, 3.0);
         assert_eq!(v4.w, 0.0);
+    }
+
+    #[test]
+    fn test_vector3_dot() {
+        let v1 = Vector3::new(1.0, 2.0, 3.0);
+        let v2 = Vector3::new(4.0, 5.0, 6.0);
+        assert_eq!(v1.dot(&v2), 32.0);
+    }
+
+    #[test]
+    fn test_vector3_cross() {
+        let v1 = Vector3::new(1.0, 2.0, 3.0);
+        let v2 = Vector3::new(4.0, 5.0, 6.0);
+        let v3 = v1.cross(&v2);
+        assert_eq!(v3.x, -3.0);
+        assert_eq!(v3.y, 6.0);
+        assert_eq!(v3.z, -3.0);
     }
 
     #[test]

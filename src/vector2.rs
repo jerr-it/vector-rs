@@ -9,7 +9,10 @@ pub struct Vector2<T> {
     pub y: T,
 }
 
-impl<T: Default + Copy> Vector2<T> {
+impl<T> Vector2<T>
+where
+    T: Default + Copy + Add<Output = T> + Sub<Output = T> + Mul<Output = T>,
+{
     pub fn new(x: T, y: T) -> Vector2<T> {
         Vector2 { x, y }
     }

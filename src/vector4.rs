@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Sub, SubAssign, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(C)]
@@ -9,9 +9,17 @@ pub struct Vector4<T> {
     pub w: T,
 }
 
-impl<T: Copy> Vector4<T> {
-    pub fn new(x: T, y: T, z: T, w: T) -> Vector4<T>{
+impl<T> Vector4<T>
+where
+    T: Copy + Default + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>,
+{
+    pub fn new(x: T, y: T, z: T, w: T) -> Vector4<T> {
         Vector4 { x, y, z, w }
+    }
+
+    // Implement the dot product of two vectors
+    pub fn dot(&self, other: &Vector4<T>) -> T {
+        self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
     }
 }
 
@@ -23,7 +31,7 @@ impl<T: Add<Output = T>> Add<Vector4<T>> for Vector4<T> {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
             z: self.z + rhs.z,
-            w: self.w + rhs.w
+            w: self.w + rhs.w,
         }
     }
 }
@@ -45,7 +53,7 @@ impl<T: Sub<Output = T>> Sub<Vector4<T>> for Vector4<T> {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
-            w: self.w - rhs.w
+            w: self.w - rhs.w,
         }
     }
 }
@@ -67,7 +75,7 @@ impl<T: Mul<Output = T> + Copy> Mul<T> for Vector4<T> {
             x: self.x * rhs,
             y: self.y * rhs,
             z: self.z * rhs,
-            w: self.w * rhs
+            w: self.w * rhs,
         }
     }
 }
@@ -92,6 +100,13 @@ mod tests {
         assert_eq!(vector4.y, 2.0);
         assert_eq!(vector4.z, 3.0);
         assert_eq!(vector4.w, 4.0);
+    }
+
+    #[test]
+    fn test_vector4_dot() {
+        let vector4 = Vector4::new(1.0, 2.0, 3.0, 4.0);
+        let vector4_2 = Vector4::new(5.0, 6.0, 7.0, 8.0);
+        assert_eq!(vector4.dot(&vector4_2), 70.0);
     }
 
     #[test]
