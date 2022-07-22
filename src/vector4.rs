@@ -23,6 +23,15 @@ where
     }
 }
 
+impl<T> From<[T; 4]> for Vector4<T>
+where
+    T: Default + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>,
+{
+    fn from(v: [T; 4]) -> Self {
+        Vector4::new(v[0], v[1], v[2], v[3])
+    }
+}
+
 impl<T: Add<Output = T>> Add<Vector4<T>> for Vector4<T> {
     type Output = Vector4<T>;
 
@@ -96,6 +105,15 @@ mod tests {
     #[test]
     fn test_vector4_new() {
         let vector4 = Vector4::new(1.0, 2.0, 3.0, 4.0);
+        assert_eq!(vector4.x, 1.0);
+        assert_eq!(vector4.y, 2.0);
+        assert_eq!(vector4.z, 3.0);
+        assert_eq!(vector4.w, 4.0);
+    }
+
+    #[test]
+    fn test_from_array() {
+        let vector4 = Vector4::from([1.0, 2.0, 3.0, 4.0]);
         assert_eq!(vector4.x, 1.0);
         assert_eq!(vector4.y, 2.0);
         assert_eq!(vector4.z, 3.0);

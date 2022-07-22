@@ -37,6 +37,15 @@ where
     }
 }
 
+impl<T> From<[T; 3]> for Vector3<T>
+where
+    T: Default + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>,
+{
+    fn from(v: [T; 3]) -> Self {
+        Vector3::new(v[0], v[1], v[2])
+    }
+}
+
 impl Vector3<f32> {
     pub fn magnitude(&self) -> f32 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
@@ -134,6 +143,14 @@ mod tests {
     #[test]
     fn test_vector3_new() {
         let v = Vector3::new(1.0, 2.0, 3.0);
+        assert_eq!(v.x, 1.0);
+        assert_eq!(v.y, 2.0);
+        assert_eq!(v.z, 3.0);
+    }
+
+    #[test]
+    fn test_from_array() {
+        let v = Vector3::from([1.0, 2.0, 3.0]);
         assert_eq!(v.x, 1.0);
         assert_eq!(v.y, 2.0);
         assert_eq!(v.z, 3.0);

@@ -26,6 +26,15 @@ where
     }
 }
 
+impl<T> From<[T; 2]> for Vector2<T>
+where
+    T: Default + Copy + Add<Output = T> + Sub<Output = T> + Mul<Output = T>,
+{
+    fn from(v: [T; 2]) -> Self {
+        Vector2::new(v[0], v[1])
+    }
+}
+
 impl Vector2<f32> {
     pub fn magnitude(&self) -> f32 {
         (self.x.powi(2) + self.y.powi(2)).sqrt()
@@ -37,6 +46,19 @@ impl Vector2<f32> {
             x: self.x * inv_sqrt,
             y: self.y * inv_sqrt,
         }
+    }
+
+    pub fn clamp_mag(&mut self, limit: f32) {
+        let mag = self.magnitude();
+        if mag > limit {
+            let inv_mag = mag.recip();
+            self.x *= inv_mag * limit;
+            self.y *= inv_mag * limit;
+        }
+    }
+
+    pub fn distance(&self, other: &Vector2<f32>) -> f32 {
+        (self.x - other.x).hypot(self.y - other.y)
     }
 }
 
@@ -115,6 +137,13 @@ mod tests {
     #[test]
     fn test_vector2_new() {
         let vector = Vector2::new(1.0, 2.0);
+        assert_eq!(vector.x, 1.0);
+        assert_eq!(vector.y, 2.0);
+    }
+
+    #[test]
+    fn test_from_array() {
+        let vector = Vector2::from([1.0, 2.0]);
         assert_eq!(vector.x, 1.0);
         assert_eq!(vector.y, 2.0);
     }
