@@ -1,5 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
+use crate::Vector2;
+
 use super::Vector4;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -12,7 +14,11 @@ pub struct Vector3<T> {
 
 impl<T> Vector3<T>
 where
-    T: Default + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>,
+    T: Default
+        + Copy
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Mul<Output = T>,
 {
     pub fn new(x: T, y: T, z: T) -> Vector3<T> {
         Vector3 { x, y, z }
@@ -39,10 +45,48 @@ where
 
 impl<T> From<[T; 3]> for Vector3<T>
 where
-    T: Default + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>,
+    T: Default
+        + Copy
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Mul<Output = T>,
 {
     fn from(v: [T; 3]) -> Self {
         Vector3::new(v[0], v[1], v[2])
+    }
+}
+
+impl<T> From<Vector2<T>> for Vector3<T>
+where
+    T: Default
+        + Copy
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Mul<Output = T>,
+{
+    fn from(v: Vector2<T>) -> Self {
+        Vector3 {
+            x: v.x,
+            y: v.y,
+            z: Default::default(),
+        }
+    }
+}
+
+impl<T> From<Vector4<T>> for Vector3<T>
+where
+    T: Default
+        + Copy
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Mul<Output = T>,
+{
+    fn from(v: Vector4<T>) -> Self {
+        Vector3 {
+            x: v.x,
+            y: v.y,
+            z: v.z,
+        }
     }
 }
 

@@ -1,6 +1,8 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
-use super::{Vector3, Vector4};
+use crate::Vector4;
+
+use super::Vector3;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(C)]
@@ -16,14 +18,6 @@ where
     pub fn new(x: T, y: T) -> Vector2<T> {
         Vector2 { x, y }
     }
-
-    pub fn as_vector3(&self) -> Vector3<T> {
-        Vector3::new(self.x, self.y, Default::default())
-    }
-
-    pub fn as_vector4(&self) -> Vector4<T> {
-        Vector4::new(self.x, self.y, Default::default(), Default::default())
-    }
 }
 
 impl<T> From<[T; 2]> for Vector2<T>
@@ -32,6 +26,24 @@ where
 {
     fn from(v: [T; 2]) -> Self {
         Vector2::new(v[0], v[1])
+    }
+}
+
+impl<T> From<Vector3<T>> for Vector2<T>
+where
+    T: Default + Copy + Add<Output = T> + Sub<Output = T> + Mul<Output = T>,
+{
+    fn from(v: Vector3<T>) -> Self {
+        Vector2::<T>::new(v.x, v.y)
+    }
+}
+
+impl<T> From<Vector4<T>> for Vector2<T>
+where
+    T: Default + Copy + Add<Output = T> + Sub<Output = T> + Mul<Output = T>,
+{
+    fn from(v: Vector4<T>) -> Self {
+        Vector2::<T>::new(v.x, v.y)
     }
 }
 
@@ -59,6 +71,13 @@ impl Vector2<f32> {
 
     pub fn distance(&self, other: &Vector2<f32>) -> f32 {
         (self.x - other.x).hypot(self.y - other.y)
+    }
+
+    pub fn set_rotation(&mut self, angle: f32) {
+        let sin = angle.sin();
+        let cos = angle.cos();
+        self.x = self.x * cos - self.y * sin;
+        self.y = self.x * sin + self.y * cos;
     }
 }
 
@@ -151,7 +170,7 @@ mod tests {
     #[test]
     fn test_vector2_as_vector3() {
         let vector = Vector2::new(1.0, 2.0);
-        let vector3 = vector.as_vector3();
+        let vector3: Vector3<f64> = vector.into();
         assert_eq!(vector3.x, 1.0);
         assert_eq!(vector3.y, 2.0);
         assert_eq!(vector3.z, 0.0);
@@ -160,7 +179,7 @@ mod tests {
     #[test]
     fn test_vector2_as_vector4() {
         let vector = Vector2::new(1.0, 2.0);
-        let vector4 = vector.as_vector4();
+        let vector4: Vector4<f64> = vector.into();
         assert_eq!(vector4.x, 1.0);
         assert_eq!(vector4.y, 2.0);
         assert_eq!(vector4.z, 0.0);
