@@ -4,7 +4,7 @@ use crate::Vector4;
 
 use super::Vector3;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 #[repr(C)]
 pub struct Vector2<T> {
     pub x: T,

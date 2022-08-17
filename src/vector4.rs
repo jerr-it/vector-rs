@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 
 use crate::{Vector2, Vector3};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 #[repr(C)]
 pub struct Vector4<T> {
     pub x: T,
