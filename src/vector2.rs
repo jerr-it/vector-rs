@@ -15,7 +15,7 @@ impl<T> Vector2<T>
 where
     T: Default + Copy + Add<Output = T> + Sub<Output = T> + Mul<Output = T>,
 {
-    pub fn new(x: T, y: T) -> Vector2<T> {
+    pub const fn new(x: T, y: T) -> Vector2<T> {
         Vector2 { x, y }
     }
 }

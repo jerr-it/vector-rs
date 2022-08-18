@@ -19,7 +19,7 @@ where
         + std::ops::Sub<Output = T>
         + std::ops::Mul<Output = T>,
 {
-    pub fn new(x: T, y: T, z: T, w: T) -> Vector4<T> {
+    pub const fn new(x: T, y: T, z: T, w: T) -> Vector4<T> {
         Vector4 { x, y, z, w }
     }
 

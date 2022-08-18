@@ -20,12 +20,8 @@ where
         + std::ops::Sub<Output = T>
         + std::ops::Mul<Output = T>,
 {
-    pub fn new(x: T, y: T, z: T) -> Vector3<T> {
+    pub const fn new(x: T, y: T, z: T) -> Vector3<T> {
         Vector3 { x, y, z }
-    }
-
-    pub fn as_vector4(&self) -> Vector4<T> {
-        Vector4::new(self.x, self.y, self.z, Default::default())
     }
 
     // Calculate the dot product of two vectors
@@ -203,7 +199,7 @@ mod tests {
     #[test]
     fn test_vector3_as_vector4() {
         let v = Vector3::new(1.0, 2.0, 3.0);
-        let v4 = v.as_vector4();
+        let v4: Vector4<f64> = v.into();
         assert_eq!(v4.x, 1.0);
         assert_eq!(v4.y, 2.0);
         assert_eq!(v4.z, 3.0);
